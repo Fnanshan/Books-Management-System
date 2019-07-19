@@ -1,0 +1,88 @@
+准备工作：
+1.安装sqlserver,eclipse,JDBCdriver
+2.下载JDBCdriver//4.2(压缩文件)
+3.一定解压JDBCdriver(建议解压文件放入eclipse,防止文件丢失)
+
+建立连接步骤：
+启动eclipse-->project-->Properties-->java built path-->libraries
+   -->Add External Jars
+
+SQL设置：
+
+启动——>配置工具——>SQL SEVER配置管理器——>SQLsever 网络配置——>MSS协议
+   ——>Tcp/Ip——>启用
+   设置IP：127.0.0.1   端口值：1433    启用：是
+
+
+SQL SEVER服务——>SQL sever（MSSQLSEVER）：右键——>重新启动
+验证设置：
+运行——>cmd——>敲入命令telnet   127.0.0.1   1433
+正确结果是：一个闪动的光标点
+程序操作：
+1.import java.sql.*
+
+2.加载注册驱动
+    Class.forName("实现驱动的全限定名")；
+    SQLSERVER：  Class.forName("sun.jdbc.odbc.JdbcOdbcDriver")；
+  1)创建了Class对象，
+  2）执行一个静态代码块
+  3）DriverManager.rigisterDriver(new  Driver(注册驱动))
+3.使用DriverManager获取连接
+  Connection  con =DriverManager.getConnection("url","username","password");
+  url="jdbc:sqlserver://127.0.0.1:1433;DatabaseName=studentinfo"//如果使用的是本机的数据库127.0.0.1可以用localhost
+4.创建一个Statement:如果要执行SQL语句，必须获取java,sql,Statement实例（对象）
+掌握两种实例定义方法
+ 1）执行静态SQL语句
+   Statement  stmt =  con.createStatement();
+ 2）执行动态的SQL语句
+   PreparedStatement  stmt =  con.preparedStatement();
+5.执行SQL语句
+ 1）excuteQuery()：
+    ResultSet executeQuery(String sqlString)：执行查询数据库的SQL语句，返回一个结果集（ResultSet）对象。   
+ 2）excuteUpdate（）
+    int executeUpdate(String sqlString)：用于执行INSERT、UPDATE或DELETE语句以及SQL DDL语句，如：CREATE TABLE和DROP TABLE等  
+ 3）excute
+    execute(sqlString):用于执行返回多个结果集、多个更新计数或二者组合的语句。
+6.查询结果
+查询结果作为结果集（ResultSet）
+
+7.关闭创建的驱动和连接:关闭顺序和创建顺序相反。
+stmt.close();
+con.close();
+
+执行SQL语句举例：
+
+String sql="DELELT FROM info_student WHERE id=2"
+stmt.executeUpdate(sql);
+
+
+SQL语句：
+select * from student
+
+select * from student where UserName='aaa' and stuId='2014001'   //条件或多条件查询
+
+
+delete  from student where UserName='aaa' and password=.... //条件删除
+
+   //数据库备份:
+  select * into student_bk from student       
+                                        
+                                        
+  //数据库回复:                      
+ insert into student select * from student_bk                                       
+                                        
+                                        
+
+insert into student values('ddd','2017')   //对所有字段都要插入
+
+
+insert  into student(字段名) values(字段所对应的值)  //对部分字段插入
+
+
+update student set UserName='eee'  where Password='2017' //修改数据
+
+update student set address=‘河南省’，sex='男' where stuId=’20141001‘
+
+
+  
+  
